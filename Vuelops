@@ -1,0 +1,110 @@
+
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Vuelops — Ofertas de viajes</title>
+<style>
+/* Estilos resumidos */
+body{font-family:sans-serif;margin:0;padding:20px;background:#f6f8fb;color:#333}
+header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap}
+h1{margin:0;color:#0d6efd}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;margin-top:20px}
+.card{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1);cursor:pointer}
+.card img{width:100%;height:150px;object-fit:cover}
+.card-body{padding:10px}
+.badge{background:#e6f0ff;color:#0d6efd;padding:4px 8px;border-radius:5px;font-size:12px}
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;padding:10px}
+.modal{background:#fff;border-radius:8px;max-width:500px;width:100%;padding:20px}
+input,select,button{padding:8px;margin-top:5px;width:100%;border-radius:5px;border:1px solid #ccc}
+button{background:#0d6efd;color:#fff;border:none;cursor:pointer}
+button:hover{background:#0b5ed7}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>✈️ Vuelops</h1>
+  <p>Ofertas y compra de boletos</p>
+</header>
+
+<div class="grid" id="grid"></div>
+
+<!-- Modal de compra -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <h2 id="offerTitle">Compra de boleto</h2>
+    <form id="buyForm">
+      <label>Nombre completo</label>
+      <input type="text" name="nombre" required>
+      
+      <label>Correo electrónico</label>
+      <input type="email" name="correo" required>
+      
+      <label>Teléfono</label>
+      <input type="tel" name="telefono" required>
+      
+      <label>Documento de identidad</label>
+      <input type="text" name="documento" required>
+
+      <label>Subir imagen (comprobante o foto de tarjeta simulada)</label>
+      <input type="file" name="foto" accept="image/*" required>
+      
+      <button type="submit">Finalizar compra</button>
+      <button type="button" onclick="closeModal()" style="background:#ccc;color:#000">Cancelar</button>
+    </form>
+  </div>
+</div>
+
+<script>
+const offers = [
+  {title:"Bogotá → Madrid", region:"Europa", img:"https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1000&q=60"},
+  {title:"Medellín → Ciudad de México", region:"América", img:"https://images.unsplash.com/photo-1509395176047-4a66953fd231?auto=format&fit=crop&w=1000&q=60"},
+  {title:"Cartagena → Punta Cana", region:"América", img:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=60"}
+];
+
+const grid = document.getElementById('grid');
+const modal = document.getElementById('modalBackdrop');
+const offerTitle = document.getElementById('offerTitle');
+const buyForm = document.getElementById('buyForm');
+let selectedOffer = null;
+
+function renderOffers(){
+  offers.forEach(o=>{
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <img src="${o.img}" alt="${o.title}">
+      <div class="card-body">
+        <h3>${o.title}</h3>
+        <span class="badge">${o.region}</span>
+      </div>
+    `;
+    card.onclick = ()=> openModal(o);
+    grid.appendChild(card);
+  });
+}
+
+function openModal(offer){
+  selectedOffer = offer;
+  offerTitle.textContent = `Compra de boleto: ${offer.title}`;
+  modal.style.display = 'flex';
+}
+
+function closeModal(){
+  modal.style.display = 'none';
+  buyForm.reset();
+}
+
+buyForm.addEventListener('submit', e=>{
+  e.preventDefault();
+  alert(`✅ Compra realizada con éxito para: ${selectedOffer.title}\nTe enviaremos la confirmación a tu correo.`);
+  closeModal();
+});
+
+renderOffers();
+</script>
+
+</body>
+</html>
